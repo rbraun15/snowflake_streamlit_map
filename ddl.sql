@@ -1,0 +1,76 @@
+ 
+use database demo_map;
+use schema addresses;
+
+CREATE OR REPLACE SEQUENCE DEMO_MAP.ADDRESSES.ROW_ID_ADDRESSES_SEQ
+  START WITH 1
+  INCREMENT BY 1;
+
+create or replace TABLE ADDRESSES_TO_PARSE (
+	ROW_ID integer DEFAULT DEMO_MAP.ADDRESSES.ROW_ID_ADDRESSES_SEQ.NEXTVAL,  -- Auto-increment row ID,
+  ADDR_STRING VARCHAR(16777216),
+  CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP() 
+);
+
+insert into ADDRESSES_TO_PARSE (addr_string) values
+('3598 Pelham Road Greenville, SC 29615'),
+('1 Augusta St, Greenville, SC 29601'),
+('775 Woodruff Rd, Greenville, SC 29607'),
+('9 W Washington St, Greenville, SC 29601');
+
+
+create or replace TABLE DEMO_MAP.ADDRESSES.ADDRESSES_PARSED (
+	ROW_ID NUMBER(38,0),
+	ADDR_STRING VARCHAR(16777216),
+	NUMBER VARCHAR(16777216),
+	STREET VARCHAR(16777216),
+	STREET_TYPE VARCHAR(16777216),
+	CITY VARCHAR(16777216),
+	STATE VARCHAR(16777216),
+	ZIP VARCHAR(16777216)
+);
+
+SELECT * FROM ADDRESSES_PARSED;
+
+
+create or replace TABLE ADDRESSES_TO_MAP (
+	POI_NAME VARCHAR(16777216),
+	CATEGORY_MAIN VARCHAR(16777216),
+  LONGITUDE FLOAT,
+  LATITUDE FLOAT,
+	NUMBER VARCHAR(16777216),
+	STREET VARCHAR(16777216),
+  STREET_TYPE VARCHAR(16777216),
+	CITY VARCHAR(16777216),
+	STATE VARCHAR(16777216),
+	ZIP VARCHAR(16777216)
+);
+
+
+INSERT INTO ADDRESSES_TO_MAP 
+(POI_NAME, CATEGORY_MAIN, LONGITUDE, LATITUDE, NUMBER, STREET, STREET_TYPE, CITY, STATE, ZIP) values
+('4th_HOME', 'Places_Lived', -82.2654182, 34.8802659,'103', 'Autumn','Road','Greer','SC','29650'),
+('3rd_HOME', 'Places_Lived',-82.2847616,34.8836784,'405', 'Lady Slipper','Lane','Greer','SC','29650'),
+('2nd_HOME', 'Places_Lived',-82.2908043,34.7027473,'405', 'Wild Horse Creek','Drive','Simpsonville','SC','29680'),
+('1st_HOME', 'Places_Lived',-82.3005278,34.8988036,'616', 'Gray Fox','Square','Taylors','SC','29687')
+;
+
+INSERT INTO ADDRESSES_TO_MAP 
+(POI_NAME, CATEGORY_MAIN, LONGITUDE, LATITUDE, NUMBER, STREET, STREET_TYPE, CITY, STATE, ZIP) values
+('GHS Main Campus', 'Places_Worked', -82.413142, 34.817685,'701', 'Grove','Road','Greenville','SC','29605'),
+('GHS_Patewood', 'Places_Worked',-82.3232183,34.8552952,'200', 'Pateweood','Drive','Greenville','SC','29615'),
+('HealthFirst_Mauldin', 'Places_Worked',-82.2845754,34.8106756,'401', 'Brookfield','Parkway','Simpsonville','SC','29607')
+;
+
+-- misc
+select * from US_POINTS_OF_INTEREST__ADDRESSES.CYBERSYN.US_ADDRESSES
+where
+zip = '29687'
+and 
+street like '%Gray%' and
+number ='616'
+limit 50;
+
+
+
+
